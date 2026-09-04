@@ -72,7 +72,10 @@
         {% endset %}
         {% set tbody %}
             {% for person in people_arc %}
-                <tr {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
+                <tr {% if (not person.could_pay) and (user_role in ('admin', 'admin_viewer')) %}
+                        class="table-secondary"
+                    {% endif %}
+                    {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
                         {% set url = url_for('sp_ol.ol', ku=person.ku) %}
                         onclick="window.location.href='{{url}}'"
                     {% endif %}>
