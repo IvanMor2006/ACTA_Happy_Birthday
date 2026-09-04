@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<form class="border rounded-3 col-md-3 mx-md-auto px-3">
+    {% if not code_sent %}
+        <h1 class="text-center py-3">Регистрация</h1>
+        <h5>Нужно начать чат с ботом</h5>
+        <p>Перейдите по ссылке <a href="https://t.me/acta_hb_bot?start" target="_blank">ACTA Happy Birthday</a> и нажмите "СТАРТ". После чего нажмите кнопку ниже.</p>
+        <button class="btn btn-primary col-12 mb-3 border-top" type="submit"
+                formaction="{{ url_for('auth.login_code_send') }}"
+                formmethod="post">
+            Отправить код подтверждения
+        </button>
+    {% else %}
+        <h1 class="text-center py-3">Введите код подтверждения</h1>
+        <p>От бота сейчас придёт сообщение с кодом подтверждения.</p>
+        <div class="mb-3">
+            <input class="form-control" type="number" name="code" id="code" required>
+        </div>
+        <button class="btn btn-primary col-12 mb-3 border-top" type="submit"
+                formaction="{{ url_for('auth.login_code_verify') }}"
+                formmethod="post">
+            Подтвердить
+        </button>
+
+    {% endif %}
+</form>
+{% endblock %}

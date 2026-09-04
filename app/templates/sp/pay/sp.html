@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Долги{% endblock %}
+{% block content %}
+{% if user_role == 'admin' %}
+    <button type="button" class="mb-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#add">
+        <i class="bi bi-coin"></i> Добавить долг
+    </button>
+    {% set modal_id = 'add' %}
+    {% set action_url = url_for('sp_pay.add') %}
+    {% set modal_title = 'Добавление долга' %}
+    {% set dr = None %}
+    {% include 'sp/pay/add_edit_pay.html' %}
+{% endif %}
+<div class="d-md-flex gap-4">
+    <div class="col-md-4 table-responsive">
+        {% set thead %}
+            <tr class="table-danger text-center">
+                <th colspan="4">Актуальные</th>
+            </tr>
+            <tr class="table-danger">
+                <th>Дата</th>
+                <th>Человек</th>
+                <th>Именинник</th>
+                <th>Оплачено</th>
+            </tr>
+        {% endset %}
+        {% set tbody %}
+            {% for pay in pays %}
+                {% if pay.pay == 0 %}
+                    {% set clr = 'table-danger' %}
+                    {% elif pay.pay != pay.price %}
+                    {% set clr = 'table-warning' %}
+                {% endif %}
+                <tr {% if clr %} class={{clr}} {% endif %}>
+                    <td>{{ pay.t_t }} {{ pay.t_d }}</td>
+                    <td {% set url = url_for('sp_ol.ol', ku=pay.ku_ol) %}
+                        onclick="window.location.href='{{url}}'">
+                        {{ pay.ol_naim }}
+                    </td>
+                    <td {% set url = url_for('sp_dr.dr', ku=pay.ku_dr) %}
+                        onclick="window.location.href='{{url}}'">
+                        {{ pay.dr_naim }} {{ pay.cy_dr }}
+                    </td>
+                    <td>{{ pay.pay }} / {{ pay.price }}</td>
+                </tr>
+            {% endfor %}
+        {% endset %}
+        {% include 'unit/table.html' %}
+    </div>
+    <div class="col-md-4 table-responsive">
+        {% set thead %}
+            <tr class="table-success text-center">
+                <th colspan="4">Закрытые</th>
+            </tr>
+            <tr class="table-success">
+                <th>Дата</th>
+                <th>Человек</th>
+                <th>Именинник</th>
+                <th>Оплачено</th>
+            </tr>
+        {% endset %}
+        {% set tbody %}
+            {% for pay in pays_done %}
+                <tr class="table-success">
+                    <td>{{ pay.t_t }} {{ pay.t_d }}</td>
+                    <td {% set url = url_for('sp_ol.ol', ku=pay.ku_ol) %}
+                        onclick="window.location.href='{{url}}'">
+                        {{ pay.ol_naim }}
+                    </td>
+                    <td {% set url = url_for('sp_dr.dr', ku=pay.ku_dr) %}
+                        onclick="window.location.href='{{url}}'">
+                        {{ pay.dr_naim }} {{ pay.cy_dr }}
+                    </td>
+                    <td>{{ pay.pay }} / {{ pay.price }}</td>
+                </tr>
+            {% endfor %}
+        {% endset %}
+        {% include 'unit/table.html' %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<form class="border rounded-3 col-md-3  mb-3 mx-md-auto" method="post" action="{{ url_for('auth.login_password') }}">
+    <h1 class="text-center py-3 border-bottom">Вход или регистрация</h1>
+    <div class="m-3">
+        <div class="mb-3">
+            <label for="ku_ol">Логин</label>
+            <select class="form-select" name="ku_ol" id="ku_ol" required>
+                <option disabled {% if not pending_ku %} selected {% endif%}>Выберите ваше имя</option>
+                {% for person in people %}
+                <option {% if person.password_hash %}
+                            class="bg-success-subtle"
+                        {% endif %}
+                        value="{{ person.ku }}"
+                        {% if pending_ku|string == person.ku|string %}
+                            selected
+                        {% endif %}>
+                    {{ person.naim }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="password">Пароль</label>
+            <div class="d-flex mb-3">
+                <input placeholder="Придумайте, если заходите в первый раз" class="form-control" type="password" name="password" id="password" required
+                    {% if pending_ku %}
+                        autofocus
+                    {% endif %}>
+                <button class="btn border" type="button" id="togglePassword">
+                    <i class="bi bi-eye" id="eyeIcon"></i>
+                </button>
+                <script>
+                    const togglePassword = document.getElementById('togglePassword');
+                    const passwordInput = document.getElementById('password');
+                    const eyeIcon = document.getElementById('eyeIcon');
+
+                    togglePassword.addEventListener('click', function () {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    eyeIcon.classList.toggle('bi-eye');
+                    eyeIcon.classList.toggle('bi-eye-slash');
+                    });
+                </script>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label" for="forgot">Забыл или хочу сменить пароль</label>
+                <input class="form-check-input" type="checkbox" name="forgot" id="forgot">
+            </div>
+        </div>
+        <button class="btn btn-primary col-12" type="submit">
+            Подтвердить
+        </button>
+    </div>
+</form>
+<p class="text-center">Нет твоего имени в списке? Значит тебя ещё не занесли в базу. Напиши Ване в Telegram.</p>
+{% endblock %}

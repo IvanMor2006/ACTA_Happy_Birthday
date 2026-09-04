@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}День рождения {{dr.naim | naim_rp}}{% endblock %}
+{% block content %}
+<div class="d-md-flex justify-content-between">
+    <fieldset class="col-md-6 text-bg-light mb-2 px-3 pb-3 border rounded-3 align-self-start">
+        <legend class="float-none w-auto"><h1 class="m-0">День рождения {{ dr.naim | naim_rp }}</h1></legend>
+        <div class="row">
+            <div class="col-6">
+                <h2 class="fw-normal m-0">{{ dr.summa - dr.debt }} / {{ dr.summa }}<i class="nbrb-icon">BYN</i></h2>
+                <h5 class="fw-normal m-0">Скидываемся по {{ dr.price }}<i class="nbrb-icon">BYN</i></h5>
+            </div>
+            <div class="col-6 text-end d-flex flex-column">
+                <h2 class="fw-normal">{{ dr.cy_dr }}</h2>
+                {% if user_role == 'admin' %}
+                    <div class="mt-auto">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </div>
+                    <div class="text-start">
+                        {% set modal_id = 'edit' %}
+                        {% set action_url = url_for('sp_dr.edit', ku=dr.ku) %}
+                        {% set modal_title = 'Изменение данных дня рождения ' + dr.naim | naim_rp %}
+                        {% include 'sp/dr/add_edit_dr.html' %}
+                        {% set action_url = url_for('sp_dr.delete', ku=dr.ku) %}
+                        {% set modal_title = 'Точно удалить день рождения ' + dr.naim | naim_rp + ' на ' + dr.event_year|string + ' год?' %}
+                        {% include 'sp/delete.html' %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </fieldset>
+    <div class="col-md-3">
+        {% set thead %}
+            <tr>
+                <th scope="col">Дата</th>
+                <th scope="col">Человек</th>
+                <th scope="col">Оплачено</th>
+            </tr>
+        {% endset %}
+        {% set tbody %}
+            {% for pay in pays %}
+                {% if pay.pay == 0 %}
+                    {% set clr = 'table-danger' %}
+                {% elif pay.pay != pay.price %}
+                    {% set clr = 'table-warning' %}
+                {% endif %}
+                <tr {% if clr %} class={{clr}} {% endif %}
+                    {% if (user_ku == pay.ku_ol) or (user_role in ('admin', 'admin_viewer')) %}
+                        {% set url = url_for('sp_ol.ol', ku=pay.ku_ol) %}
+                        onclick="window.location.href='{{url}}'"
+                    {% endif %}>
+                    <td>{{ pay.t_t }}<br>{{ pay.t_d }}</td>
+                    <td>{{ pay.ol_naim }}</td>
+                    <td>{{ pay.pay }} / {{ pay.price }}</td>
+                </tr>
+            {% endfor%}
+        {% endset %}
+        {% include 'unit/table.html' %}
+    </div>
+</div>
+{% endblock %}

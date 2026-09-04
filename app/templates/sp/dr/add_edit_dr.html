@@ -1,0 +1,38 @@
+<div class="modal fade modal-bottom" id="{{ modal_id }}" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered mt-auto">
+        <form class="modal-content" method="post" action="{{ action_url }}">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ modal_title }}</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {% if modal_id == 'add' %}
+                <label for="ol">Именинник</label>
+                <select class="form-select mb-2" name="ol" id="ol" required>
+                    {% for person in people_ol %}
+                    <option value="{{ person.ku }}|{{ person.naim | naim_rp }}">
+                        {{ person.naim }}
+                    </option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+                <div class="mb-3">
+                    <label for="event_year">Год</label>
+                    <input class="form-control" type="number" name="event_year" id="event_year"
+                           value="{{ dr.event_year if dr.event_year else '' }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="price">Прайс</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="nbrb-icon fs-4">BYN</i></span>
+                        <input class="form-control" type="number" name="price" id="price" 
+                        step="0.01" min="0.01" placeholder="7.00" value="{{ dr.price if dr.price else '7.00' }}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Подтвердить</button>
+            </div>
+        </form>
+    </div>
+</div>

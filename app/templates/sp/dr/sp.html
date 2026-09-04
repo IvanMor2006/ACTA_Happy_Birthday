@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Дни рождения{% endblock %}
+{% block content %}
+<div class="col-12 col-md-4">
+    {% if user_role == 'admin' %}
+        <button type="button" class="mb-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#add">
+            <i class="bi bi-calendar-plus-fill"></i> Добавить день рождения
+        </button>
+        {% set modal_id = 'add' %}
+        {% set action_url = url_for('sp_dr.add') %}
+        {% set modal_title = 'Добавление нового дня рождения' %}
+        {% set dr = None %}
+        {% include 'sp/dr/add_edit_dr.html' %}
+    {% endif %}
+    <div class="table-responsive">
+        {% set thead %}
+            <tr>
+                <th>Дата</th>
+                <th>Именинник</th>
+                <th>Прайс</th>
+                {% if user_role in ('admin', 'admin_viewer') %}
+                    <th>Собрано</th>
+                {% endif %}
+            </tr>
+        {% endset %}
+        {% set tbody %}
+            {% for person in people %}
+            <tr {% if user_role in ('admin', 'admin_viewer') %}
+                    {% set url = url_for('sp_dr.dr', ku=person.ku) %}
+                    onclick="window.location.href='{{url}}'"
+                {% endif %}>
+                <td>{{ person.cy_dr }}</td>
+                <td>{{ person.naim | naim_rp }}</td>
+                <td>{{ person.price if (user_ku != person.ku_ol) or (user_role in ('admin', 'admin_viewer')) }}</td>
+                {% if user_role in ('admin', 'admin_viewer') %}
+                    <td>{{ person.summa - person.debt }} / {{ person.summa }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        {% endset %}
+        {% include 'unit/table.html' %}
+    </div>
+</div>
+{% endblock %}

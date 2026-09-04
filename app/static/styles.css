@@ -1,0 +1,75 @@
+@media (max-width: 768px) {
+    .modal-bottom .modal-dialog {
+        position: fixed !important;
+        bottom: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+    .modal-bottom .modal-content {
+        border-radius: 20px 20px 0 0 !important;
+    }
+    .modal-bottom.fade .modal-dialog {
+        transform: translateY(100%) !important;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .modal-bottom.show .modal-dialog {
+        transform: translateY(0) !important;
+    }
+    .modal-dialog-centered {
+        display: block !important;
+        align-items: unset !important;
+        min-height: unset !important;
+    }
+}
+.flash-container {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050;
+    max-width: 400px;
+    width: 100%;
+}
+@media (min-width: 768px) {
+    .flash-container {
+        top: 1rem;
+        bottom: auto;
+        padding: 0 20px;
+    }
+}
+@media (max-width: 768px) {
+    .flash-container {
+        bottom: 1rem;
+        top: auto;
+        padding: 0 10px;
+    }
+}
+
+@font-face {
+    font-family: "nbrb";
+    src: url("./fonts/nbrb.woff2") format("woff2"),
+         url("./fonts/nbrb.ttf") format("truetype"),
+         url("./fonts/nbrb.woff") format("woff");
+    unicode-range: U+E901, U+42, U+59, U+4E;
+}
+.nbrb-icon {
+    font-family: "nbrb" !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: normal;
+    -webkit-font-feature-settings: "liga";
+    -moz-font-feature-settings: "liga=1";
+    -moz-font-feature-settings: "liga";
+    -ms-font-feature-settings: "liga" 1;
+    font-feature-settings: "liga";
+    -webkit-font-variant-ligatures: discretionary-ligatures;
+    font-variant-ligatures: discretionary-ligatures;
+}
+.nbrb-icon-byn:before {
+    content: "\e901";
+}

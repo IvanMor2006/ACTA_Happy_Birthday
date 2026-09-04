@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Люди{% endblock %}
+{% block content %}
+
+{% if user_role in ('admin', 'admin_viewer') %}
+    <h4>Общий долг {{ total_debt }}<i class="nbrb-icon">BYN</i></h4>
+{% endif %}
+
+{% if user_role == 'admin' %}
+    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#add">
+        <i class="bi bi-person-plus-fill"></i> Добавить человека
+    </button>
+    {% set modal_id = 'add' %}
+    {% set action_url = url_for('sp_ol.add') %}
+    {% set modal_title = 'Добавление нового человека' %}
+    {% set person = None %}
+    {% include 'sp/ol/add_edit_ol.html' %}
+{% endif %}
+
+<div class="d-md-flex gap-4">
+    <div class="col-md-4 table-responsive">
+        {% set thead %}
+            <tr><th colspan="8" class="text-center">Состоят в театре</th></tr>
+            <tr>
+                <th>День рождения</th>
+                <th>Возраст</th>
+                <th>Имя</th>
+                {% if user_role in ('admin', 'admin_viewer') %}
+                    <th>TG ID</th>
+                    <th>Роль</th>
+                    <th>Пароль</th>
+                    <th>Баланс</th>
+                    <th>Долг</th>
+                {% endif %}
+            </tr>
+        {% endset %}
+        {% set tbody %}
+            {% for person in people %}
+                {% if person.cm_dr %}
+                    {% set clr = 'table-warning' %}
+                {% elif not person.could_pay %}
+                    {% set clr = 'table-secondary' %}
+                {% endif %}
+                <tr {% if clr %} class={{clr}} {% endif %}
+                    {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
+                        {% set url = url_for('sp_ol.ol', ku=person.ku) %}
+                        onclick="window.location.href='{{url}}'"
+                    {% endif %}>
+                    <td>{{ person.t_dr }}</td>
+                    <td>{{ person.age }}</td>
+                    <td>{{ person.naim }}</td>
+                    {% if user_role in ('admin', 'admin_viewer') %}
+                        <td>{{ person.tg_id if person.tg_id else '' }}</td>
+                        <td>{{ person.role }}</td>
+                        <td>{{ 'Есть' if person.password_hash else '' }}</td>
+                        <td>{{ person.balance }}</td>
+                        <td>{{ person.debt }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% endset %}
+        {% include 'unit/table.html' %}
+    </div>
+    <div class="col-md-4 table-responsive">
+        {% set thead %}
+            <tr><th colspan="8" class="text-center">Не состоят в театре</th></tr>
+            <tr>
+                <th>День рождения</th>
+                <th>Имя</th>
+                <th>Возраст</th>
+                {% if user_role in ('admin', 'admin_viewer') %}
+                    <th>TG ID</th>
+                    <th>Роль</th>
+                    <th>Пароль</th>
+                    <th>Баланс</th>
+                    <th>Долг</th>
+                {% endif %}
+            </tr>
+        {% endset %}
+        {% set tbody %}
+            {% for person in people_arc %}
+                {% if person.cm_dr %}
+                    {% set clr = 'table-warning' %}
+                {% elif not person.could_pay %}
+                    {% set clr = 'table-secondary' %}
+                {% endif %}
+                <tr {% if clr %} class={{clr}} {% endif %}
+                    {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
+                        {% set url = url_for('sp_ol.ol', ku=person.ku) %}
+                        onclick="window.location.href='{{url}}'"
+                    {% endif %}>
+                    <td>{{ person.t_dr }}</td>
+                    <td>{{ person.naim }}</td>
+                    <td>{{ person.age }}</td>
+                    {% if user_role in ('admin', 'admin_viewer') %}
+                        <td>{{ person.tg_id if person.tg_id else '' }}</td>
+                        <td>{{ person.role }}</td>
+                        <td>{{ 'Есть' if person.password_hash else '' }}</td>
+                        <td>{{ person.balance }}</td>
+                        <td>{{ person.debt }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% endset %}
+        {% include 'unit/table.html' %}
+    </div>
+</div>
+{% endblock %}

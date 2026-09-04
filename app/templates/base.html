@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}АСТА{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-light">
+            <div class="container-fluid d-flex flex-wrap align-items-center px-2 px-md-4">
+                <button class="navbar-toggler order-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <a class="navbar-brand order-2 mx-auto ms-md-0 me-md-4" href="/">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="ACTA" class="rounded-circle"
+                        style="width: 50px; height: 50px; object-fit: cover;">
+                    <b class="d-none d-md-inline">Главная</b>
+                </a>
+
+                <div id="navbarMain" class="collapse navbar-collapse order-4 order-md-3">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link {% if request.path == '/sp/ol' %}active{% endif %}" href="{{ url_for('sp_ol.sp') }}">
+                            <i class="bi bi-people-fill"></i> Люди
+                        </a></li>
+                        <li class="nav-item"><a class="nav-link {% if request.path == '/sp/dr' %}active{% endif %}" href="{{ url_for('sp_dr.sp') }}">
+                            <i class="bi bi-cake2-fill"></i> Дни рождения
+                        </a></li>
+                        {% if user_role in ('admin', 'admin_viewer') %}
+                            <li class="nav-item"><a class="nav-link {% if request.path == '/sp/pay' %}active{% endif %}" href="{{ url_for('sp_pay.sp') }}">
+                                <i class="bi bi-coin"></i> Долги
+                            </a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="dropdown order-3 order-md-4">
+                    {% if user_role == 'admin' %}
+                        {% set user_clr = 'danger' %}
+                    {% elif user_role == 'admin_viewer' %}
+                        {% set user_clr = 'primary' %}
+                    {% elif user_role == 'user' %}
+                        {% set user_clr = 'success' %}
+                    {% else %}
+                        {% set user_clr = 'dark' %}
+                    {% endif %}
+                    <button class="btn btn-{{user_clr}} rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                            style="height: 50px; width: 50px;">
+                        <i class="bi bi-person-fill fs-4"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><span class="dropdown-header fs-5" id="guestHeader">{{ user_name }}</span></li>
+                        {% if user_ku %}
+                            <li><a class="dropdown-item" href="{{ url_for('sp_ol.ol', ku=user_ku) }}"><i class="bi bi-person"></i> Посмотреть профиль</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.exit') }}"><i class="bi bi-box-arrow-in-left"></i> Выйти</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="{{ url_for('auth.login') }}"><i class="bi bi-box-arrow-in-right"></i> Войти</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+            </div>
+            <script>
+            (function() {
+                document.addEventListener('DOMContentLoaded', function() {
+                const alerts = document.querySelectorAll('.alert');
+                if (alerts.length === 0) return;
+                setTimeout(function() {
+                    alerts.forEach(function(alert) {
+                    if (alert.classList.contains('show')) {
+                        if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+                        new bootstrap.Alert(alert).close();
+                        } else {
+                        alert.classList.remove('show');
+                        alert.classList.add('d-none');
+                        }
+                    }
+                    });
+                }, 5000);
+                });
+            })();
+            </script>
+        {% endif %}
+        {% endwith %}
+        <div class="px-2 px-md-4">
+            {% block content %}{% endblock %}
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>
