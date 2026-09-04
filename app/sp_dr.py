@@ -28,7 +28,7 @@ def sp():
     return render_template('sp/dr/sp.html', people=people, people_ol=people_ol)
 
 @sp_dr_bp.route('/sp/dr/<int:ku>')
-@login_required
+@role_required(['admin'])
 def dr(ku):
     db = get_db()
     dr = db.execute('select * from v_dr_info where ku = %s', (ku,)).fetchone()

@@ -81,8 +81,10 @@
                     {% set clr = 'table-warning' %}
                 {% endif %}
                 <tr {% if clr %} class={{clr}} {% endif %}
-                    {% set url = url_for('sp_dr.dr', ku=pay.ku_dr) %}
-                    onclick="window.location.href='{{url}}'">
+                    {% if user_role in ('admin', 'admin_viewer') %}
+                        {% set url = url_for('sp_dr.dr', ku=pay.ku_dr) %}
+                        onclick="window.location.href='{{url}}'"
+                    {% endif %}>
                     <td>{{ pay.t_t }}<br>{{ pay.t_d }}</td>
                     <td>{{ pay.dr_naim | naim_rp }}<br>{{ pay.cy_dr }}</td>
                     <td>{{ pay.pay }} / {{ pay.price }}</td>

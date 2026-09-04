@@ -25,7 +25,7 @@
         {% endset %}
         {% set tbody %}
             {% for person in people %}
-            <tr {% if ((user_ku != person.ku_ol) and (user_ku is not none)) or (user_role in ('admin', 'admin_viewer')) %}
+            <tr {% if user_role in ('admin', 'admin_viewer') %}
                     {% set url = url_for('sp_dr.dr', ku=person.ku) %}
                     onclick="window.location.href='{{url}}'"
                 {% endif %}>

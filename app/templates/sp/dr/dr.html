@@ -6,9 +6,7 @@
         <legend class="float-none w-auto"><h1 class="m-0">День рождения {{ dr.naim | naim_rp }}</h1></legend>
         <div class="row">
             <div class="col-6">
-                {% if user_role in ('admin', 'admin_viewer') %}
-                    <h2 class="fw-normal m-0">{{ dr.summa - dr.debt }} / {{ dr.summa }}<i class="nbrb-icon">BYN</i></h2>
-                {% endif %}
+                <h2 class="fw-normal m-0">{{ dr.summa - dr.debt }} / {{ dr.summa }}<i class="nbrb-icon">BYN</i></h2>
                 <h5 class="fw-normal m-0">Скидываемся по {{ dr.price }}<i class="nbrb-icon">BYN</i></h5>
             </div>
             <div class="col-6 text-end d-flex flex-column">
