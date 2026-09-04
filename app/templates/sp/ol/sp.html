@@ -2,10 +2,6 @@
 {% block title %}Люди{% endblock %}
 {% block content %}
 
-{% if user_role in ('admin', 'admin_viewer') %}
-    <h4>Общий долг {{ total_debt }}<i class="nbrb-icon">BYN</i></h4>
-{% endif %}
-
 {% if user_role == 'admin' %}
     <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#add">
         <i class="bi bi-person-plus-fill"></i> Добавить человека
@@ -18,11 +14,11 @@
 {% endif %}
 
 <div class="d-md-flex gap-4">
-    <div class="col-md-5 table-responsive">
+    <div class="col-md-{{ '5' if user_role in ('admin', 'admin_viewer') else '3' }} table-responsive">
         {% set thead %}
             <tr><th colspan="8" class="text-center">Состоят в театре</th></tr>
             <tr>
-                <th>День рождения</th>
+                <th>День<br>рождения</th>
                 <th>Возраст</th>
                 <th>Имя</th>
                 {% if user_role in ('admin', 'admin_viewer') %}
@@ -61,11 +57,11 @@
         {% endset %}
         {% include 'unit/table.html' %}
     </div>
-    <div class="col-md-5 table-responsive">
+    <div class="col-md-{{ '5' if user_role in ('admin', 'admin_viewer') else '3' }} table-responsive">
         {% set thead %}
             <tr><th colspan="8" class="text-center">Не состоят в театре</th></tr>
             <tr>
-                <th>День рождения</th>
+                <th>День<br>рождения</th>
                 <th>Имя</th>
                 <th>Возраст</th>
                 {% if user_role in ('admin', 'admin_viewer') %}
@@ -105,4 +101,9 @@
         {% include 'unit/table.html' %}
     </div>
 </div>
+
+{% if user_role in ('admin', 'admin_viewer') %}
+    <h4>Общий долг {{ total_debt }}<i class="nbrb-icon">BYN</i></h4>
+{% endif %}
+
 {% endblock %}
