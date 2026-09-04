@@ -61,8 +61,6 @@ def add():
         db.rollback()
         if 'sp_ol_naim_key' in str(e):
             flash('Человек с таким именем уже есть', 'danger')
-        elif 'sp_ol_tg_id_key' in str(e):
-            flash('Telegram ID уже используется', 'danger')
     except Exception as e:
         db.rollback()
         flash(f'Ошибка: {e}', 'danger')
@@ -94,8 +92,6 @@ def edit(ku):
         if db: db.rollback()
         if 'sp_ol_naim_key' in str(e):
             flash('Человек с таким именем уже есть', 'danger')
-        elif 'sp_ol_tg_id_key' in str(e):
-            flash('Telegram ID уже используется', 'danger')
     except Exception as e:
         if db: db.rollback()
         flash(f'Ошибка: {e}', 'danger')
