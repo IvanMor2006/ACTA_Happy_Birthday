@@ -32,19 +32,16 @@
         {% endset %}
         {% set tbody %}
             {% for person in people %}
-                {% if person.cm_dr %}
-                    {% set clr = 'table-warning' %}
-                {% elif not person.could_pay %}
-                    {% set clr = 'table-secondary' %}
-                {% endif %}
-                <tr {% if clr %} class={{clr}} {% endif %}
+                <tr {% if (not person.could_pay) and (user_role in ('admin', 'admin_viewer')) %}
+                        class="table-secondary"
+                    {% endif %}
                     {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
                         {% set url = url_for('sp_ol.ol', ku=person.ku) %}
                         onclick="window.location.href='{{url}}'"
                     {% endif %}>
-                    <td>{{ person.t_dr }}</td>
-                    <td>{{ person.age }}</td>
-                    <td>{{ person.naim }}</td>
+                    <td {% if person.cm_dr %} class="table-warning" {% endif %}>{{ person.t_dr }}</td>
+                    <td {% if person.cm_dr %} class="table-warning" {% endif %}>{{ person.age }}</td>
+                    <td {% if person.cm_dr %} class="table-warning" {% endif %}>{{ person.naim }}</td>
                     {% if user_role in ('admin', 'admin_viewer') %}
                         <td>{{ person.tg_id if person.tg_id else '' }}</td>
                         <td>{{ person.role }}</td>
@@ -62,8 +59,8 @@
             <tr><th colspan="8" class="text-center">Не состоят в театре</th></tr>
             <tr>
                 <th>День<br>рождения</th>
-                <th>Имя</th>
                 <th>Возраст</th>
+                <th>Имя</th>
                 {% if user_role in ('admin', 'admin_viewer') %}
                     <th>TG ID</th>
                     <th>Роль</th>
@@ -75,19 +72,13 @@
         {% endset %}
         {% set tbody %}
             {% for person in people_arc %}
-                {% if person.cm_dr %}
-                    {% set clr = 'table-warning' %}
-                {% elif not person.could_pay %}
-                    {% set clr = 'table-secondary' %}
-                {% endif %}
-                <tr {% if clr %} class={{clr}} {% endif %}
-                    {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
+                <tr {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
                         {% set url = url_for('sp_ol.ol', ku=person.ku) %}
                         onclick="window.location.href='{{url}}'"
                     {% endif %}>
-                    <td>{{ person.t_dr }}</td>
-                    <td>{{ person.naim }}</td>
-                    <td>{{ person.age }}</td>
+                    <td {% if person.cm_dr %} class="table-info" {% endif %}>{{ person.t_dr }}</td>
+                    <td {% if person.cm_dr %} class="table-info" {% endif %}>{{ person.age }}</td>
+                    <td {% if person.cm_dr %} class="table-info" {% endif %}>{{ person.naim }}</td>
                     {% if user_role in ('admin', 'admin_viewer') %}
                         <td>{{ person.tg_id if person.tg_id else '' }}</td>
                         <td>{{ person.role }}</td>
