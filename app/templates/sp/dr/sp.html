@@ -17,23 +17,29 @@
             <tr>
                 <th>Дата</th>
                 <th>Именинник</th>
-                <th>Прайс</th>
-                {% if user_role in ('admin', 'admin_viewer') %}
-                    <th>Собрано</th>
+                {% if user_ku is not none %}
+                    <th>Прайс</th>
+                    <th>{{ 'Собрано' if user_role in ('admin', 'admin_viewer') else 'Цена подарка' }}</th>
                 {% endif %}
             </tr>
         {% endset %}
         {% set tbody %}
             {% for person in people %}
-            <tr {% if user_role in ('admin', 'admin_viewer') %}
+            <tr {% if ((user_ku != person.ku_ol) and (user_ku is not none)) or (user_role in ('admin', 'admin_viewer')) %}
                     {% set url = url_for('sp_dr.dr', ku=person.ku) %}
                     onclick="window.location.href='{{url}}'"
                 {% endif %}>
                 <td>{{ person.cy_dr }}</td>
                 <td>{{ person.naim | naim_rp }}</td>
-                <td>{{ person.price if (user_ku != person.ku_ol) or (user_role in ('admin', 'admin_viewer')) }}</td>
-                {% if user_role in ('admin', 'admin_viewer') %}
-                    <td>{{ person.summa - person.debt }} / {{ person.summa }}</td>
+                {% if user_ku is not none %}
+                    <td>{{ person.price if (user_ku != person.ku_ol) or (user_role in ('admin', 'admin_viewer')) }}</td>
+                    <td>
+                    {% if user_role in ('admin', 'admin_viewer') %}
+                        {{ person.summa - person.debt }} / {{ person.summa }}
+                    {% elif user_ku == person.ku_ol %}
+                        {{ person.summa }}
+                    {% endif %}
+                    </td>
                 {% endif %}
             </tr>
             {% endfor %}
