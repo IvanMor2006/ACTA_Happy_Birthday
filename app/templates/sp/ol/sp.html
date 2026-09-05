@@ -14,86 +14,90 @@
 {% endif %}
 
 <div class="d-md-flex gap-4">
-    <div class="col-md-{{ '5' if user_role in ('admin', 'admin_viewer') else '3' }} table-responsive">
-        {% set thead %}
-            <tr><th colspan="8" class="text-center">Состоят в театре</th></tr>
-            <tr>
-                <th>День<br>рождения</th>
-                <th>Возраст</th>
-                <th>Имя</th>
-                {% if user_role in ('admin', 'admin_viewer') %}
-                    <th>TG ID</th>
-                    <th>Роль</th>
-                    <th>Пароль</th>
-                    <th>Баланс</th>
-                    <th>Долг</th>
-                {% endif %}
-            </tr>
-        {% endset %}
-        {% set tbody %}
-            {% for person in people %}
-                <tr {% if (not person.could_pay) and (user_role in ('admin', 'admin_viewer')) %}
-                        class="table-secondary"
-                    {% endif %}
-                    {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
-                        {% set url = url_for('sp_ol.ol', ku=person.ku) %}
-                        onclick="window.location.href='{{url}}'"
-                    {% endif %}>
-                    <td {% if person.cm_dr %} class="table-warning" {% endif %}>{{ person.t_dr }}</td>
-                    <td {% if person.cm_dr %} class="table-warning" {% endif %}>{{ person.age }}</td>
-                    <td {% if person.cm_dr %} class="table-warning" {% endif %}>{{ person.naim }}</td>
+    {% if people %}
+        <div class="col-md-{{ '5' if user_role in ('admin', 'admin_viewer') else '3' }} table-responsive">
+            {% set thead %}
+                <tr><th colspan="8" class="text-center">Состоят в театре</th></tr>
+                <tr>
+                    <th>День<br>рождения</th>
+                    <th>Возраст</th>
+                    <th>Имя</th>
                     {% if user_role in ('admin', 'admin_viewer') %}
-                        <td>{{ person.tg_id if person.tg_id else '' }}</td>
-                        <td>{{ person.role }}</td>
-                        <td>{{ 'Есть' if person.password_hash else '' }}</td>
-                        <td>{{ person.balance }}</td>
-                        <td>{{ person.debt }}</td>
+                        <th>TG ID</th>
+                        <th>Роль</th>
+                        <th>Пароль</th>
+                        <th>Баланс</th>
+                        <th>Долг</th>
                     {% endif %}
                 </tr>
-            {% endfor %}
-        {% endset %}
-        {% include 'unit/table.html' %}
-    </div>
-    <div class="col-md-{{ '5' if user_role in ('admin', 'admin_viewer') else '3' }} table-responsive">
-        {% set thead %}
-            <tr><th colspan="8" class="text-center">Не состоят в театре</th></tr>
-            <tr>
-                <th>День<br>рождения</th>
-                <th>Возраст</th>
-                <th>Имя</th>
-                {% if user_role in ('admin', 'admin_viewer') %}
-                    <th>TG ID</th>
-                    <th>Роль</th>
-                    <th>Пароль</th>
-                    <th>Баланс</th>
-                    <th>Долг</th>
-                {% endif %}
-            </tr>
-        {% endset %}
-        {% set tbody %}
-            {% for person in people_arc %}
-                <tr {% if (not person.could_pay) and (user_role in ('admin', 'admin_viewer')) %}
-                        class="table-secondary"
-                    {% endif %}
-                    {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
-                        {% set url = url_for('sp_ol.ol', ku=person.ku) %}
-                        onclick="window.location.href='{{url}}'"
-                    {% endif %}>
-                    <td {% if person.cm_dr %} class="table-info" {% endif %}>{{ person.t_dr }}</td>
-                    <td {% if person.cm_dr %} class="table-info" {% endif %}>{{ person.age }}</td>
-                    <td {% if person.cm_dr %} class="table-info" {% endif %}>{{ person.naim }}</td>
+            {% endset %}
+            {% set tbody %}
+                {% for person in people %}
+                    <tr {% if (not person.could_pay) and (user_role in ('admin', 'admin_viewer')) %}
+                            class="table-secondary"
+                        {% endif %}
+                        {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
+                            {% set url = url_for('sp_ol.ol', ku=person.ku) %}
+                            onclick="window.location.href='{{url}}'"
+                        {% endif %}>
+                        <td {% if person.cm_dr %} class="table-warning" {% endif %}>{{ person.t_dr }}</td>
+                        <td {% if person.cm_dr %} class="table-warning" {% endif %}>{{ person.age }}</td>
+                        <td {% if person.cm_dr %} class="table-warning" {% endif %}>{{ person.naim }}</td>
+                        {% if user_role in ('admin', 'admin_viewer') %}
+                            <td>{{ person.tg_id if person.tg_id else '' }}</td>
+                            <td>{{ person.role }}</td>
+                            <td>{{ 'Есть' if person.password_hash else '' }}</td>
+                            <td>{{ person.balance }}</td>
+                            <td>{{ person.debt }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            {% endset %}
+            {% include 'unit/table.html' %}
+        </div>
+    {% endif %}
+    {% if people_arc %}
+        <div class="col-md-{{ '5' if user_role in ('admin', 'admin_viewer') else '3' }} table-responsive">
+            {% set thead %}
+                <tr><th colspan="8" class="text-center">Не состоят в театре</th></tr>
+                <tr>
+                    <th>День<br>рождения</th>
+                    <th>Возраст</th>
+                    <th>Имя</th>
                     {% if user_role in ('admin', 'admin_viewer') %}
-                        <td>{{ person.tg_id if person.tg_id else '' }}</td>
-                        <td>{{ person.role }}</td>
-                        <td>{{ 'Есть' if person.password_hash else '' }}</td>
-                        <td>{{ person.balance }}</td>
-                        <td>{{ person.debt }}</td>
+                        <th>TG ID</th>
+                        <th>Роль</th>
+                        <th>Пароль</th>
+                        <th>Баланс</th>
+                        <th>Долг</th>
                     {% endif %}
                 </tr>
-            {% endfor %}
-        {% endset %}
-        {% include 'unit/table.html' %}
-    </div>
+            {% endset %}
+            {% set tbody %}
+                {% for person in people_arc %}
+                    <tr {% if (not person.could_pay) and (user_role in ('admin', 'admin_viewer')) %}
+                            class="table-secondary"
+                        {% endif %}
+                        {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
+                            {% set url = url_for('sp_ol.ol', ku=person.ku) %}
+                            onclick="window.location.href='{{url}}'"
+                        {% endif %}>
+                        <td {% if person.cm_dr %} class="table-info" {% endif %}>{{ person.t_dr }}</td>
+                        <td {% if person.cm_dr %} class="table-info" {% endif %}>{{ person.age }}</td>
+                        <td {% if person.cm_dr %} class="table-info" {% endif %}>{{ person.naim }}</td>
+                        {% if user_role in ('admin', 'admin_viewer') %}
+                            <td>{{ person.tg_id if person.tg_id else '' }}</td>
+                            <td>{{ person.role }}</td>
+                            <td>{{ 'Есть' if person.password_hash else '' }}</td>
+                            <td>{{ person.balance }}</td>
+                            <td>{{ person.debt }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            {% endset %}
+            {% include 'unit/table.html' %}
+        </div>
+    {% endif %}
 </div>
 
 {% if user_role in ('admin', 'admin_viewer') %}

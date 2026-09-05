@@ -19,7 +19,7 @@ def sp():
     people_arc = db.execute('''
         select *
         from v_ol_info
-        where not in_theater
+        where not in_theater and naim not like '%ADMIN%'
         order by to_char(dr, 'mmdd'), naim
     ''').fetchall()
     roles = db.execute('select * from v_roles').fetchall()

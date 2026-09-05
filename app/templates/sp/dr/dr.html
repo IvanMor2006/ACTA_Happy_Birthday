@@ -33,33 +33,35 @@
             </div>
         </div>
     </fieldset>
-    <div class="col-md-3">
-        {% set thead %}
-            <tr>
-                <th scope="col">Дата</th>
-                <th scope="col">Человек</th>
-                <th scope="col">Оплачено</th>
-            </tr>
-        {% endset %}
-        {% set tbody %}
-            {% for pay in pays %}
-                {% if pay.pay == 0 %}
-                    {% set clr = 'table-danger' %}
-                {% elif pay.pay != pay.price %}
-                    {% set clr = 'table-warning' %}
-                {% endif %}
-                <tr {% if clr %} class={{clr}} {% endif %}
-                    {% if (user_ku == pay.ku_ol) or (user_role in ('admin', 'admin_viewer')) %}
-                        {% set url = url_for('sp_ol.ol', ku=pay.ku_ol) %}
-                        onclick="window.location.href='{{url}}'"
-                    {% endif %}>
-                    <td>{{ pay.t_t }}<br>{{ pay.t_d }}</td>
-                    <td>{{ pay.ol_naim }}</td>
-                    <td>{{ pay.pay }} / {{ pay.price }}</td>
+    {% if pays %}
+        <div class="col-md-3">
+            {% set thead %}
+                <tr>
+                    <th scope="col">Дата</th>
+                    <th scope="col">Человек</th>
+                    <th scope="col">Оплачено</th>
                 </tr>
-            {% endfor%}
-        {% endset %}
-        {% include 'unit/table.html' %}
-    </div>
+            {% endset %}
+            {% set tbody %}
+                {% for pay in pays %}
+                    {% if pay.pay == 0 %}
+                        {% set clr = 'table-danger' %}
+                    {% elif pay.pay != pay.price %}
+                        {% set clr = 'table-warning' %}
+                    {% endif %}
+                    <tr {% if clr %} class={{clr}} {% endif %}
+                        {% if (user_ku == pay.ku_ol) or (user_role in ('admin', 'admin_viewer')) %}
+                            {% set url = url_for('sp_ol.ol', ku=pay.ku_ol) %}
+                            onclick="window.location.href='{{url}}'"
+                        {% endif %}>
+                        <td>{{ pay.t_t }}<br>{{ pay.t_d }}</td>
+                        <td>{{ pay.ol_naim }}</td>
+                        <td>{{ pay.pay }} / {{ pay.price }}</td>
+                    </tr>
+                {% endfor%}
+            {% endset %}
+            {% include 'unit/table.html' %}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
