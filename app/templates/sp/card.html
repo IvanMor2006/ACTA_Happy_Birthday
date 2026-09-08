@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<div class="mb-3">
+    <div class="bg-success rounded-4 col-12 col-md-4 p-3">
+        <a href="https://pay.raschet.by/#00020132570010by.raschet010746722711028BY64AKBB3034000504671007000053039335802BY63041486" target="_blank">
+        <img class="col-6" src="{{ url_for('static', filename='belarusbank_naim.png') }}">
+        <div class="col-12 text-end">
+            <img class="col-5" src="{{ url_for('static', filename='belarusbank_qr.png') }}">
+        </div>
+        </a>
+    </div>
+</div>
+<div>
+    <a href="https://pay.raschet.by/#00020132570010by.raschet010744854711028BY50ALFA301433DAWG001027000053039335802BY63043490" target="_blank">
+    <div class="bg-danger rounded-4 col-12 col-md-4 p-3">
+        <img class="col-5" src="{{ url_for('static', filename='alfabank_naim.png') }}">
+        <div class="col-12 text-end">
+            <img class="col-5" src="{{ url_for('static', filename='alfabank_qr.png') }}">
+        </div>
+    </div></a>
+</div>
+{% endblock %}
