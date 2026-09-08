@@ -5,12 +5,13 @@
     <h1 class="text-center py-3 border-bottom">Вход или регистрация</h1>
     <div class="m-3">
         <div class="mb-3">
+            <input type="text" id="hidden_username" autocomplete="username" style="display: none;">
             <label for="ku_ol">Логин</label>
             <select class="form-select" name="ku_ol" id="ku_ol" required>
                 <option disabled {% if not pending_ku %} selected {% endif%}>Выберите ваше имя</option>
                 {% for person in people %}
-                <option {% if person.password_hash %}
-                            class="bg-success-subtle"
+                <option {% if not person.password_hash %}
+                            class="bg-secondary-subtle"
                         {% endif %}
                         value="{{ person.ku }}"
                         {% if pending_ku|string == person.ku|string %}
@@ -20,6 +21,22 @@
                 </option>
                 {% endfor %}
             </select>
+            <script>
+                const hidden_input = document.getElementById('hidden_username');
+                const select_username = document.getElementById('ku_ol');
+
+                function sync_username() {
+                    hidden_input.value = select_username.options[select_username.selectedIndex].text;
+                    hidden_input.dispatchEvent(new Event('input', { bubbles: true }));
+                    hidden_input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+
+                select_username.addEventListener('change', sync_username);
+
+                if (select_username.value) {
+                    sync_username();
+                }
+            </script>
         </div>
         <div class="mb-3">
             <label for="password">Пароль</label>
