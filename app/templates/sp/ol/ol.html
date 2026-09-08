@@ -3,28 +3,30 @@
 {% block content %}
 <div class="d-md-flex justify-content-between">
     <div class="col-md-6 text-bg-light mb-2 p-3 border rounded-3 align-self-start">
-        <div class="row">
-            <div class="col-6">
-                <h1 class="m-0">{{ person.naim }}</h1>
-                <h5 class="fw-normal{% if not person.t_dr %} text-danger{% endif %}">{{ person.t_dr if person.t_dr else 'День рождения не указан' }}</h5>
+        <div class="d-flex justify-content-between">
+            <h3 class="m-0">{{ person.naim }}</h3>
+            <h3 class="m-0">{{ person.balance }}<i class="nbrb-icon">BYN</i></h3>
+        </div>
+        <div class="d-flex justify-content-between">
+            <h5 class="fw-normal{% if not person.t_dr %} text-danger{% endif %}">{{ person.t_dr if person.t_dr else 'День рождения не указан' }}</h5>
+            <h5 class="fw-normal{% if not person.tg_id %} text-danger{% endif %}">{{ person.tg_id if person.tg_id else 'TG ID не указан' }}</h5>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div>
                 <p class="m-0{% if not person.could_pay %} text-danger{% endif %}">{{ '✔️ М' if person.could_pay else '❌ Не м' }}ожет платить</p>
                 <p class="m-0{% if not person.in_theater %} text-danger{% endif %}">{{ '✔️ С' if person.in_theater else '❌ Не с'}}остоит в театре</p>
             </div>
-            <div class="col-6 text-end d-flex flex-column">
-                <h1 class="m-0">{{ person.balance }}<i class="nbrb-icon">BYN</i></h1>
-                <h5 class="fw-normal{% if not person.tg_id %} text-danger{% endif %}">{{ person.tg_id if person.tg_id else 'TG ID не указан' }}</h5>
-                {% if user_role == 'admin' %}
-                    <div class="mt-auto">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_money">
-                            <i class="nbrb-icon fs-5">BYN</i> 
-                        </button>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit">
-                            <i class="bi bi-pencil-fill"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete">
-                            <i class="bi bi-trash-fill"></i>
-                        </button>                            
-                    </div>
+            {% if user_role == 'admin' %}
+                <div class="mt-auto">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_money">
+                        <i class="nbrb-icon fs-5">BYN</i> 
+                    </button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit">
+                        <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>    
                     <div class="text-start">
                         <div class="modal fade modal-bottom" id="add_money" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered mt-auto">
@@ -51,53 +53,105 @@
                             </div>
                         </div>
 
-                        {% set naim = person.naim %}
                         {% set modal_id = 'edit' %}
                         {% set action_url = url_for('sp_ol.edit', ku=person.ku) %}
-                        {% set modal_title = 'Изменение данных ' + naim | naim_rp %}
-                        {% include 'sp/ol/add_edit_ol.html' %}
+                        {% include 'sp/ol/add_edit.html' %}
 
                         {% set action_url = url_for('sp_ol.delete', ku=person.ku) %}
-                        {% set modal_title = 'Точно удалить профиль ' + naim | naim_rp + '?' %}
                         {% include 'sp/delete.html' %}
-                    </div>
-                {% endif %}
-            </div>
+                    </div>                        
+                </div>
+            {% endif %}
         </div>
     </div>
     {% if pays %}
-    <div class="col-md-3">
-        {% set thead %}
-            <tr>
-                <th scope="col">Дата</th>
-                <th scope="col">День рождения</th>
-                <th scope="col">Оплачено</th>
-            </tr>
-        {% endset %}
-        {% set tbody %}
-            {% for pay in pays %}
-                {% if pay.pay == 0 %}
-                    {% set clr = 'table-danger' %}
-                {% elif pay.pay != pay.price %}
-                    {% set clr = 'table-warning' %}
-                {% endif %}
-                <tr {% if clr %} class={{clr}} {% endif %}
-                    {% if user_role in ('admin', 'admin_viewer') %}
-                        {% set url = url_for('sp_dr.dr', ku=pay.ku_dr) %}
-                        onclick="window.location.href='{{url}}'"
-                    {% endif %}>
-                    <td>{{ pay.t_t }}<br>{{ pay.t_d }}</td>
-                    <td>{{ pay.dr_naim | naim_rp }}<br>{{ pay.cy_dr }}</td>
-                    <td>{{ pay.pay }} / {{ pay.price }}</td>
+        <div class="table-responsive">
+            {% set thead %}
+                <tr>
+                    <th>Дата</th>
+                    <th>День рождения</th>
+                    <th>Оплачено</th>
                 </tr>
-            {% endfor%}
-            <tr>
-                <th class="text-end" colspan="2">Общий долг</th>
-                <td>{{ person.debt }}<i class="nbrb-icon">BYN</i></td>
-            </tr>
-        {% endset %}
-        {% include 'unit/table.html' %}
-    </div>
+            {% endset %}
+            {% set tbody %}
+                {% for pay in pays %}
+                    {% if pay.pay == 0 %}
+                        {% set clr = 'table-danger' %}
+                    {% elif pay.pay != pay.price %}
+                        {% set clr = 'table-warning' %}
+                    {% endif %}
+                    <tr {% if clr %} class={{clr}} {% endif %}>
+                        <td>{{ pay.t_t }}<br>{{ pay.t_d }}</td>
+                        <td {% if user_role in ('admin', 'admin_viewer') %}
+                                {% set url = url_for('sp_dr.dr', ku=pay.ku_dr) %}
+                                onclick="window.location.href='{{url}}'"
+                            {% endif %}>
+                            {{ pay.dr_naim | naim_rp }}<br>{{ pay.cy_dr }}
+                        </td>
+                        <td>
+                            {{ pay.pay }} / {{ pay.price }}
+                            {% if user_role == 'admin' %}
+                                {% set pay_naim = 'за день рождения ' + pay.dr_naim | naim_rp + ' на ' + pay.cy_dr %}
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editPay"
+                                    data-pay_naim="{{ pay_naim }}"
+                                    data-ku="{{ pay.ku }}"
+                                    data-pay="{{ pay.pay }}"
+                                    data-price="{{ pay.price }}">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deletePay"
+                                    data-pay_naim="{{ pay_naim }}"
+                                    data-ku="{{ pay.ku }}">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor%}
+                <tr>
+                    <th class="text-end" colspan="2">Общий долг</th>
+                    <td>{{ person.debt }}<i class="nbrb-icon">BYN</i></td>
+                </tr>
+            {% endset %}
+            {% include 'unit/table.html' %}
+        </div>
+        {% if user_role == 'admin' %}
+            {% include 'sp/pay/edit.html' %}
+            {% include 'sp/pay/delete.html' %}
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const eModal = document.getElementById('editPay')
+                    if (eModal) {
+                        eModal.addEventListener('show.bs.modal', function(event) {
+                            const button = event.relatedTarget;
+
+                            const pay_naim = button.getAttribute('data-pay_naim');
+                            const ku = button.getAttribute('data-ku');
+                            const pay = button.getAttribute('data-pay');
+                            const price = button.getAttribute('data-price');
+
+                            document.getElementById('epay_naim').textContent = pay_naim;
+                            document.getElementById('epay_ku').value = ku;
+                            document.getElementById('pay_pay').value = pay;
+                            document.getElementById('pay_pay').max = price;
+                        });
+                    }
+
+                    const dModal = document.getElementById('deletePay')
+                    if (dModal) {
+                        dModal.addEventListener('show.bs.modal', function(event) {
+                            const button = event.relatedTarget;
+
+                            const pay_naim = button.getAttribute('data-pay_naim');
+                            const ku = button.getAttribute('data-ku');
+
+                            document.getElementById('dpay_naim').textContent = pay_naim; 
+                            document.getElementById('dpay_ku').value = ku;
+                        });
+                    }
+                });
+            </script>
+        {% endif %}
     {% endif %}
 </div>
 {% endblock %}

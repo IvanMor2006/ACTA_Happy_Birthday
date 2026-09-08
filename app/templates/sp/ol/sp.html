@@ -8,9 +8,8 @@
     </button>
     {% set modal_id = 'add' %}
     {% set action_url = url_for('sp_ol.add') %}
-    {% set modal_title = 'Добавление нового человека' %}
     {% set person = None %}
-    {% include 'sp/ol/add_edit_ol.html' %}
+    {% include 'sp/ol/add_edit.html' %}
 {% endif %}
 
 <div class="d-md-flex gap-4">

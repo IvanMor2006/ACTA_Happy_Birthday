@@ -1,0 +1,21 @@
+<div class="modal fade modal-bottom" id="editPay" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered mt-auto">
+        <form class="modal-content" method="post" action="{{ url_for('sp_pay.edit') }}">
+            <input type="hidden" name="ku" id="epay_ku">
+            <div class="modal-header">
+                <h5 class="modal-title">Изменение долга <span id="epay_naim"></span></h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="nbrb-icon fs-4">BYN</i></span>
+                    <input class="form-control" type="number" name="pay" id="pay_pay" 
+                    step="0.01" min="0.00" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Подтвердить</button>
+            </div>
+        </form>
+    </div>
+</div>

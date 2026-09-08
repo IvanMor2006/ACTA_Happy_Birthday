@@ -28,26 +28,50 @@ def add():
         db.commit()
         flash('Новый долг добавлен', 'success')
     except psycopg.errors.UniqueViolation as e:
-        db.rollback()
+        if db: db.rollback()
         if 'uq_pay' in str(e):
             flash(f'Долг для {ol_naim} на день рождения {dr_naim} уже есть', 'danger')
     except psycopg.errors.RaiseException as e:
-        db.rollback()
+        if db: db.rollback()
         if 'sp_pay_ol_dr_not_self' in str(e):
             flash('Нельзя добавить долг для человека на его же день рождения', 'danger')
     except Exception as e:
-        db.rollback()
+        if db: db.rollback()
         flash(f'Ошибка: {e}', 'danger')
     finally:
-        db.close()
+        if db: db.close()
     return redirect(url_for('sp_pay.sp'))
 
-@sp_pay_bp.route('sp/pay/<int:ku>/edit', methods=['POST'])
+@sp_pay_bp.route('sp/pay/edit', methods=['POST'])
 @role_required(['admin'])
-def edit(ku):
-    return redirect(url_for('sp_pay.sp'))
+def edit():
+    ref = request.referrer
+    ku = request.form.get('ku')
+    pay = request.form.get('pay')
 
-@sp_pay_bp.route('sp/pay/<int:ku>/delete', methods=['POST'])
+    try:
+        db = get_db()
+        db.execute('update sp_pay set pay = %s where ku = %s', (pay, ku))
+        db.commit()
+    except Exception as e:
+        if db: db.rollback()
+        flash(f'Ошибка: {e}', 'danger')
+    finally:
+        if db: db.close()
+    return redirect(ref)
+
+@sp_pay_bp.route('sp/pay/delete', methods=['POST'])
 @role_required(['admin'])
-def delete(ku):
-    return redirect(url_for('sp_pay.sp'))
+def delete():
+    ref = request.referrer
+    ku = request.form.get('ku')
+    try:
+        db = get_db()
+        db.execute('delete from sp_pay where ku = %s', (ku,))
+        db.commit()
+    except Exception as e:
+        if db: db.rollback()
+        flash(f'Ошибка: {e}', 'danger')
+    finally:
+        if db: db.close()
+    return redirect(ref)

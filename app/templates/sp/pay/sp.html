@@ -5,15 +5,14 @@
     <button type="button" class="mb-2 btn btn-primary" data-bs-toggle="modal" data-bs-target="#add">
         <i class="bi bi-coin"></i> Добавить долг
     </button>
-    {% set modal_id = 'add' %}
     {% set action_url = url_for('sp_pay.add') %}
     {% set modal_title = 'Добавление долга' %}
     {% set dr = None %}
-    {% include 'sp/pay/add_edit_pay.html' %}
+    {% include 'sp/pay/add.html' %}
 {% endif %}
 <div class="d-md-flex gap-4">
     {% if pays %}
-        <div class="col-md-4 table-responsive">
+        <div class="table-responsive">
             {% set thead %}
                 <tr class="table-danger text-center">
                     <th colspan="4">Актуальные</th>
@@ -42,7 +41,24 @@
                             onclick="window.location.href='{{url}}'">
                             {{ pay.dr_naim }} {{ pay.cy_dr }}
                         </td>
-                        <td>{{ pay.pay }} / {{ pay.price }}</td>
+                        <td>
+                            {{ pay.pay }} / {{ pay.price }}
+                            {% if user_role == 'admin' %}
+                                {% set pay_naim = pay.ol_naim | naim_rp + ' за день рождения ' + pay.dr_naim | naim_rp + ' на ' + pay.cy_dr %}
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editPay"
+                                    data-pay_naim="{{ pay_naim }}"
+                                    data-ku="{{ pay.ku }}"
+                                    data-pay="{{ pay.pay }}"
+                                    data-price="{{ pay.price }}">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deletePay"
+                                    data-pay_naim="{{ pay_naim }}"
+                                    data-ku="{{ pay.ku }}">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             {% endset %}
@@ -50,7 +66,7 @@
         </div>
     {% endif %}
     {% if pays_done %}
-        <div class="col-md-4 table-responsive">
+        <div class="table-responsive">
             {% set thead %}
                 <tr class="table-success text-center">
                     <th colspan="4">Закрытые</th>
@@ -74,12 +90,66 @@
                             onclick="window.location.href='{{url}}'">
                             {{ pay.dr_naim }} {{ pay.cy_dr }}
                         </td>
-                        <td>{{ pay.pay }} / {{ pay.price }}</td>
+                        <td>
+                            {{ pay.pay }} / {{ pay.price }}
+                            {% if user_role == 'admin' %}
+                                {% set pay_naim = pay.ol_naim | naim_rp + ' за день рождения ' + pay.dr_naim | naim_rp + ' на ' + pay.cy_dr %}
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editPay"
+                                    data-pay_naim="{{ pay_naim }}"
+                                    data-ku="{{ pay.ku }}"
+                                    data-pay="{{ pay.pay }}"
+                                    data-price="{{ pay.price }}">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deletePay"
+                                    data-pay_naim="{{ pay_naim }}"
+                                    data-ku="{{ pay.ku }}">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             {% endset %}
             {% include 'unit/table.html' %}
         </div>
+        {% if user_role == 'admin' %}
+            {% include 'sp/pay/edit.html' %}
+            {% include 'sp/pay/delete.html' %}
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const eModal = document.getElementById('editPay')
+                    if (eModal) {
+                        eModal.addEventListener('show.bs.modal', function(event) {
+                            const button = event.relatedTarget;
+
+                            const pay_naim = button.getAttribute('data-pay_naim');
+                            const ku = button.getAttribute('data-ku');
+                            const pay = button.getAttribute('data-pay');
+                            const price = button.getAttribute('data-price');
+
+                            document.getElementById('epay_naim').textContent = pay_naim;
+                            document.getElementById('epay_ku').value = ku;
+                            document.getElementById('pay_pay').value = pay;
+                            document.getElementById('pay_pay').max = price;
+                        });
+                    }
+
+                    const dModal = document.getElementById('deletePay')
+                    if (dModal) {
+                        dModal.addEventListener('show.bs.modal', function(event) {
+                            const button = event.relatedTarget;
+
+                            const pay_naim = button.getAttribute('data-pay_naim');
+                            const ku = button.getAttribute('data-ku');
+
+                            document.getElementById('dpay_naim').textContent = pay_naim; 
+                            document.getElementById('dpay_ku').value = ku;
+                        });
+                    }
+                });
+            </script>
+        {% endif %}
     {% endif %}
 </div>
 {% endblock %}

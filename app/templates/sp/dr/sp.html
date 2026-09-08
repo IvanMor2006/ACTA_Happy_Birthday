@@ -8,9 +8,8 @@
         </button>
         {% set modal_id = 'add' %}
         {% set action_url = url_for('sp_dr.add') %}
-        {% set modal_title = 'Добавление нового дня рождения' %}
         {% set dr = None %}
-        {% include 'sp/dr/add_edit_dr.html' %}
+        {% include 'sp/dr/add_edit.html' %}
     {% endif %}
 
     {% if people %}
@@ -32,7 +31,7 @@
                         onclick="window.location.href='{{url}}'"
                     {% endif %}>
                     <td>{{ person.cy_dr }}</td>
-                    <td>{{ person.naim | naim_rp }}</td>
+                    <td>{{ person.naim }}</td>
                     {% if user_ku is not none %}
                         <td>{{ person.price if (user_ku != person.ku_ol) or (user_role in ('admin', 'admin_viewer')) }}</td>
                         <td>

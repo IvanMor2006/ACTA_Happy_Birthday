@@ -1,4 +1,4 @@
-<div class="modal fade modal-bottom" id="{{ modal_id }}" tabindex="-1">
+<div class="modal fade modal-bottom" id="add" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered mt-auto">
         <form class="modal-content" method="post" action="{{ action_url }}">
             <div class="modal-header">
@@ -6,7 +6,6 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                {% if modal_id == 'add' %}
                 <label for="ol">Человек</label>
                 <select class="form-select mb-2" name="ol" id="ol" required>
                     {% for person in people_ol %}
@@ -15,7 +14,6 @@
                     </option>
                     {% endfor %}
                 </select>
-                {% endif %}
                 <label for="dr">Именинник</label>
                 <select class="form-select mb-2" name="dr" id="dr" required>
                     {% for person in people_dr %}
@@ -29,7 +27,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="nbrb-icon fs-4">BYN</i></span>
                         <input class="form-control" type="number" name="pay" id="pay" 
-                        step="0.01" min="0.00" {% if modal_id == 'edit' %} max="pay.price" {% endif %} value="{{ '0.00' if modal_id == 'add' else pay.pay }}" required>
+                        step="0.01" min="0.00" value="0.00" required>
                     </div>
                 </div>
             </div>

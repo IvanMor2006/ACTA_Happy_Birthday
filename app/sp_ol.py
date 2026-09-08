@@ -36,10 +36,12 @@ def ol(ku):
     if not person:
         db.close()
         abort(404)
+    people_ol = db.execute('select ku, naim from sp_ol where in_theater and could_pay order by naim').fetchall()
+    people_dr = db.execute("select ku, naim, cy_dr from v_dr_info order by to_date(cy_dr, 'dd.mm.yyyy') desc, naim").fetchall()
     pays = db.execute("select * from v_pay_info where ku_ol = %s order by to_date(cy_dr, 'DD.MM.YYYY') desc", (ku,)).fetchall()
 
     db.close()
-    return render_template('sp/ol/ol.html', person=person, roles=roles, pays=pays)
+    return render_template('sp/ol/ol.html', person=person, roles=roles, people_ol=people_ol, people_dr=people_dr, pays=pays)
 
 @sp_ol_bp.route('/sp/ol/add', methods=['POST'])
 @role_required(['admin'])

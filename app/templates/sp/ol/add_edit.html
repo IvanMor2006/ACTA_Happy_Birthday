@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered mt-auto">
         <form class="modal-content" method="post" action="{{ action_url }}">
             <div class="modal-header">
-                <h5 class="modal-title">{{ modal_title }}</h5>
+                <h5 class="modal-title">{{ 'Добавление нового человека' if modal_id == 'add' else 'Изменение данных' }}</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
