@@ -7,6 +7,7 @@ from .sp_ol import sp_ol_bp
 from .sp_dr import sp_dr_bp
 from .sp_pay import sp_pay_bp
 from .db import *
+from .decorators import *
 
 dotenv.load_dotenv()
 
@@ -35,5 +36,10 @@ def create_app():
     @app.route('/')
     def index():
         return render_template('index.html')
+
+    @app.route('/sp/card')
+    @login_required
+    def card():
+        return render_template('sp/card.html')
 
     return app

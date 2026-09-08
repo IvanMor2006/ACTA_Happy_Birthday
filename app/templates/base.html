@@ -10,7 +10,7 @@
         {% block head %}{% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-md navbar-light">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-2 mb-md-4">
             <div class="container-fluid d-flex flex-wrap align-items-center px-2 px-md-4">
                 <button class="navbar-toggler order-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                     <span class="navbar-toggler-icon"></span>
@@ -24,14 +24,19 @@
 
                 <div id="navbarMain" class="collapse navbar-collapse order-4 order-md-3">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link {% if request.path == '/sp/ol' %}active{% endif %}" href="{{ url_for('sp_ol.sp') }}">
+                        {% if user_ku %}
+                            <li class="nav-item"><a class="nav-link {% if request.path.startswith('/sp/card') %}active{% endif %}" href="{{ url_for('card') }}">
+                                <i class="bi bi-credit-card-fill"></i> Счета
+                            </a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/sp/ol') %}active{% endif %}" href="{{ url_for('sp_ol.sp') }}">
                             <i class="bi bi-people-fill"></i> Люди
                         </a></li>
-                        <li class="nav-item"><a class="nav-link {% if request.path == '/sp/dr' %}active{% endif %}" href="{{ url_for('sp_dr.sp') }}">
+                        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/sp/dr') %}active{% endif %}" href="{{ url_for('sp_dr.sp') }}">
                             <i class="bi bi-cake2-fill"></i> Дни рождения
                         </a></li>
                         {% if user_role in ('admin', 'admin_viewer') %}
-                            <li class="nav-item"><a class="nav-link {% if request.path == '/sp/pay' %}active{% endif %}" href="{{ url_for('sp_pay.sp') }}">
+                            <li class="nav-item"><a class="nav-link {% if request.path.startswith('/sp/pay') %}active{% endif %}" href="{{ url_for('sp_pay.sp') }}">
                                 <i class="bi bi-coin"></i> Долги
                             </a></li>
                         {% endif %}
@@ -46,7 +51,7 @@
                     {% elif user_role == 'user' %}
                         {% set user_clr = 'success' %}
                     {% else %}
-                        {% set user_clr = 'dark' %}
+                        {% set user_clr = 'secondary' %}
                     {% endif %}
                     <button class="btn btn-{{user_clr}} rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
                             style="height: 50px; width: 50px;">
