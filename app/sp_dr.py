@@ -45,9 +45,9 @@ def dr(ku):
 @sp_dr_bp.route('/sp/dr/add', methods=['POST'])
 @role_required(['admin'])
 def add():
-    ku_ol, ol_naim = request.form.get('ol').split('|', 1)
-    event_year = request.form.get('event_year')
-    price = request.form.get('price')
+    ku_ol, ol_naim = request.form.get('ae_dr_ol').split('|', 1)
+    event_year = request.form.get('ae_dr_event_year')
+    price = request.form.get('ae_dr_price')
 
     try:
         db = get_db()
@@ -69,9 +69,9 @@ def add():
 @sp_dr_bp.route('sp/dr/<int:ku>/edit', methods=['POST'])
 @role_required(['admin'])
 def edit(ku):
-    ku_ol, ol_naim = request.form.get('ol').split('|', 1)
-    event_year = request.form.get('event_year')
-    price = request.form.get('price')
+    ku_ol, ol_naim = request.form.get('ae_dr_ol').split('|', 1)
+    event_year = request.form.get('ae_dr_event_year')
+    price = request.form.get('ae_dr_price')
 
     try:
         db = get_db()

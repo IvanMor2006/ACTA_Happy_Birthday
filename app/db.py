@@ -1,4 +1,4 @@
-import dotenv, os, psycopg, pymorphy3
+import dotenv, os, psycopg, pymorphy3, base64
 
 dotenv.load_dotenv()
 DB_URL = os.getenv('DB_URL')
@@ -7,6 +7,11 @@ _naims = {'Куря': 'Кури', 'Амина': 'Амины'}
 
 def get_db():
     return psycopg.connect(DB_URL, row_factory=psycopg.rows.dict_row)
+
+def data_to_img(data):
+    if data:
+        return base64.b64encode(data).decode('utf-8')
+    return None
 
 def naim_rp(naim):
     global _morph_analyzer, _naims

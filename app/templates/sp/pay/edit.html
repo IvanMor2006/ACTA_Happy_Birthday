@@ -1,15 +1,15 @@
-<div class="modal fade modal-bottom" id="editPay" tabindex="-1">
+<div class="modal fade modal-bottom" id="e_pay" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered mt-auto">
         <form class="modal-content" method="post" action="{{ url_for('sp_pay.edit') }}">
-            <input type="hidden" name="ku" id="epay_ku">
+            <input type="hidden" name="e_pay_ku" id="e_pay_ku">
             <div class="modal-header">
-                <h5 class="modal-title">Изменение долга <span id="epay_naim"></span></h5>
+                <h5 class="modal-title">Изменение долга <span id="e_pay_naim"></span></h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="input-group">
                     <span class="input-group-text"><i class="nbrb-icon fs-4">BYN</i></span>
-                    <input class="form-control" type="number" name="pay" id="pay_pay" 
+                    <input class="form-control" type="number" name="e_pay_pay" id="e_pay_pay" 
                     step="0.01" min="0.00" required>
                 </div>
             </div>
@@ -19,3 +19,23 @@
         </form>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const eModal = document.getElementById('e_pay')
+        if (eModal) {
+            eModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+
+                const ku = button.getAttribute('data-ku');
+                const naim = button.getAttribute('data-naim');
+                const pay = button.getAttribute('data-pay');
+                const price = button.getAttribute('data-price');
+
+                document.getElementById('e_pay_ku').value = ku;
+                document.getElementById('e_pay_naim').textContent = naim;
+                document.getElementById('e_pay_pay').value = pay;
+                document.getElementById('e_pay_pay').max = price;
+            });
+        }
+    });
+</script>

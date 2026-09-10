@@ -3,10 +3,10 @@
 {% block content %}
 
 {% if user_role == 'admin' %}
-    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#add">
+    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#a_ol">
         <i class="bi bi-person-plus-fill"></i> Добавить человека
     </button>
-    {% set modal_id = 'add' %}
+    {% set modal_id = 'a_ol' %}
     {% set action_url = url_for('sp_ol.add') %}
     {% set person = None %}
     {% include 'sp/ol/add_edit.html' %}
@@ -36,6 +36,7 @@
                             class="table-secondary"
                         {% endif %}
                         {% if (user_ku == person.ku) or (user_role in ('admin', 'admin_viewer')) %}
+                            style="cursor: pointer;"
                             {% set url = url_for('sp_ol.ol', ku=person.ku) %}
                             onclick="window.location.href='{{url}}'"
                         {% endif %}>

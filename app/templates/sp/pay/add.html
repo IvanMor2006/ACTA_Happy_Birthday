@@ -1,4 +1,4 @@
-<div class="modal fade modal-bottom" id="add" tabindex="-1">
+<div class="modal fade modal-bottom" id="a_pay" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered mt-auto">
         <form class="modal-content" method="post" action="{{ action_url }}">
             <div class="modal-header">
@@ -6,16 +6,16 @@
                 <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <label for="ol">Человек</label>
-                <select class="form-select mb-2" name="ol" id="ol" required>
+                <label for="a_pay_ol">Человек</label>
+                <select class="form-select mb-2" name="a_pay_ol" id="a_pay_ol" required>
                     {% for person in people_ol %}
                     <option value="{{ person.ku }}|{{ person.naim | naim_rp }}">
                         {{ person.naim }}
                     </option>
                     {% endfor %}
                 </select>
-                <label for="dr">Именинник</label>
-                <select class="form-select mb-2" name="dr" id="dr" required>
+                <label for="a_pay_dr">Именинник</label>
+                <select class="form-select mb-2" name="a_pay_dr" id="a_pay_dr" required>
                     {% for person in people_dr %}
                     <option value="{{ person.ku }}|{{ person.naim | naim_rp }} {{ person.cy_dr }}">
                         {{ person.naim }} {{ person.cy_dr }}
@@ -23,10 +23,10 @@
                     {% endfor %}
                 </select>
                 <div>
-                    <label for="price">Оплатил</label>
+                    <label for="a_pay_pay">Оплатил</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="nbrb-icon fs-4">BYN</i></span>
-                        <input class="form-control" type="number" name="pay" id="pay" 
+                        <input class="form-control" type="number" name="a_pay_pay" id="a_pay_pay" 
                         step="0.01" min="0.00" value="0.00" required>
                     </div>
                 </div>

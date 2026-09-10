@@ -6,6 +6,7 @@ from .auth import auth_bp
 from .sp_ol import sp_ol_bp
 from .sp_dr import sp_dr_bp
 from .sp_pay import sp_pay_bp
+from .sp_gift import sp_gift_bp
 from .db import *
 from .decorators import *
 
@@ -19,6 +20,7 @@ def create_app():
     app.register_blueprint(sp_ol_bp)
     app.register_blueprint(sp_dr_bp)
     app.register_blueprint(sp_pay_bp)
+    app.register_blueprint(sp_gift_bp)
 
     @app.context_processor
     def inject_user():
@@ -32,6 +34,7 @@ def create_app():
         )
 
     app.jinja_env.filters['naim_rp'] = naim_rp
+    app.jinja_env.filters['data_to_img'] = data_to_img
 
     @app.route('/')
     def index():

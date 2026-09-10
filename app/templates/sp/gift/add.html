@@ -1,0 +1,94 @@
+<div class="modal fade modal-bottom" id="a_gift" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered mt-auto">
+        <form class="modal-content" method="post" action="{{ url_for('sp_gift.add', ku_ol=person.ku) }}" enctype="multipart/form-data">
+            <div class="modal-header">
+                <h5 class="modal-title">Добавление подарка</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="a_gift_naim">Название</label>
+                        <input class="form-control" type="text" name="a_gift_naim" id="a_gift_naim" required>
+                    </div>
+                    <div class="col-6">
+                        <label for="a_gift_cost">Стоимость</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="nbrb-icon fs-4">BYN</i></span>
+                            <input class="form-control" type="number" name="a_gift_cost" id="a_gift_cost" 
+                            step="0.01" min="0.01">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="a_gift_url">Ссылка</label>
+                        <input class="form-control" type="url" name="a_gift_url" id="a_gift_url" required>
+                    </div>
+                    <div class="col-6">
+                        <label for="a_gift_status">Статус</label>
+                        <select class="form-select" name="a_gift_status" id="a_gift_status" required>
+                        {% for status in gift_statuses %}
+                        <option value="{{ status.status }}">
+                            {{ status.status }}
+                        </option>
+                        {% endfor %}
+                        </select>
+                    </div> 
+                </div>
+                <img id="a_gift_img_preview" src="#" alt="Выбранное изображение" class="img-thumbnail mb-2 d-none">
+                <div>
+                    <label for="a_gift_img" id="a_gift_img_label">Выберите изображение</label>
+                    <input class="form-control" type="file" accept="image/*" name="a_gift_img" id="a_gift_img">
+                </div>
+                <script>
+                    const img_input = document.getElementById('a_gift_img');
+                    const img_preview = document.getElementById('a_gift_img_preview');
+                    const img_label = document.getElementById('a_gift_img_label');
+                    const modal = document.getElementById('a_gift');
+
+                    function showImgPrewiew(file) {
+                        if (file && file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                img_preview.src = e.target.result;
+                                img_preview.classList.remove('d-none');
+                                img_label.classList.add('d-none');
+                            }
+                            reader.readAsDataURL(file);
+                        } else {
+                            img_preview.classList.add('d-none');
+                            img_label.classList.remove('d-none');
+                            img_preview.src = '#';
+                            img_input.value = '';
+                        }
+                    }
+
+                    img_input.addEventListener('change', function() {
+                        showImgPrewiew(this.files[0]);
+                    });
+
+                    modal.addEventListener('paste', function(e) {
+                        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+
+                        for (let i = 0; i < items.length; i++) {
+                            if (items[i].type.indexOf('image') !== -1) {
+                                const file = items[i].getAsFile();
+                                const dataTransfer = new DataTransfer();
+                                dataTransfer.items.add(file);
+                                img_input.files = dataTransfer.files;
+
+                                showImgPrewiew(file);
+                                e.preventDefault();
+                                break;
+                            }
+                        }
+                    });
+                </script>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Подтвердить</button>
+            </div>
+        </form>
+    </div>
+</div>

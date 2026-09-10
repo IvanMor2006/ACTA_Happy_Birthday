@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
+import datetime
+
 from .db import *
 from .decorators import *
 
@@ -17,9 +19,9 @@ def sp():
 @sp_pay_bp.route('/sp/pay/add', methods=['POST'])
 @role_required(['admin'])
 def add():
-    ku_ol, ol_naim = request.form.get('ol').split('|', 1)
-    ku_dr, dr_naim = request.form.get('dr').split('|', 1)
-    pay = request.form.get('pay')
+    ku_ol, ol_naim = request.form.get('a_pay_ol').split('|', 1)
+    ku_dr, dr_naim = request.form.get('a_pay_dr').split('|', 1)
+    pay = request.form.get('a_pay_pay')
 
     try:
         db = get_db()
@@ -27,6 +29,10 @@ def add():
                    (ku_ol, ku_dr, pay))
         db.commit()
         flash('Новый долг добавлен', 'success')
+    except psycopg.errors.CheckViolation as e:
+        if db: db.rollback()
+        if 'sp_ol_balance_check' in str(e):
+            flash('Недостаточно денег на балансе', 'danger')
     except psycopg.errors.UniqueViolation as e:
         if db: db.rollback()
         if 'uq_pay' in str(e):
@@ -46,13 +52,17 @@ def add():
 @role_required(['admin'])
 def edit():
     ref = request.referrer
-    ku = request.form.get('ku')
-    pay = request.form.get('pay')
+    ku = request.form.get('e_pay_ku')
+    pay = request.form.get('e_pay_pay')
 
     try:
         db = get_db()
-        db.execute('update sp_pay set pay = %s where ku = %s', (pay, ku))
+        db.execute('update sp_pay set pay = %s, dt = %s where ku = %s', (pay, datetime.datetime.now(), ku))
         db.commit()
+    except psycopg.errors.CheckViolation as e:
+        if db: db.rollback()
+        if 'sp_ol_balance_check' in str(e):
+            flash('Недостаточно денег на балансе', 'danger')
     except Exception as e:
         if db: db.rollback()
         flash(f'Ошибка: {e}', 'danger')
@@ -64,11 +74,12 @@ def edit():
 @role_required(['admin'])
 def delete():
     ref = request.referrer
-    ku = request.form.get('ku')
+    ku = request.form.get('d_pay_ku')
     try:
         db = get_db()
         db.execute('delete from sp_pay where ku = %s', (ku,))
         db.commit()
+        flash('Долг успешно удалён', 'success')
     except Exception as e:
         if db: db.rollback()
         flash(f'Ошибка: {e}', 'danger')

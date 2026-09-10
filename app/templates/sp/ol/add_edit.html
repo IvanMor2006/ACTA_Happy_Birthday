@@ -2,19 +2,19 @@
     <div class="modal-dialog modal-dialog-centered mt-auto">
         <form class="modal-content" method="post" action="{{ action_url }}">
             <div class="modal-header">
-                <h5 class="modal-title">{{ 'Добавление нового человека' if modal_id == 'add' else 'Изменение данных' }}</h5>
+                <h5 class="modal-title">{{ 'Добавление нового человека' if modal_id == 'a_ol' else 'Изменение данных' }}</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="row mb-3">
                     <div class="col-6">
-                        <label for="naim">Имя</label>
-                        <input class="form-control" type="text" name="naim" id="naim"
+                        <label for="ae_ol_naim">Имя</label>
+                        <input class="form-control" type="text" name="ae_ol_naim" id="ae_ol_naim"
                                value="{{ person.naim if person.naim else '' }}" required>
                     </div>
                     <div class="col-6">
-                        <label for="naim">Роль</label>
-                        <select class="form-select" name="role" id="role" required>
+                        <label for="ae_ol_role">Роль</label>
+                        <select class="form-select" name="ae_ol_role" id="ae_ol_role" required>
                         {% for role in roles %}
                         <option value="{{ role.naim }}"
                                 {% if (person and person.role == role.naim) or (person is none and role.naim == 'user') %} selected {% endif %}>
@@ -26,25 +26,25 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-6">
-                        <label for="dr">День рождения</label>
-                        <input class="form-control" type="date" name="dr" id="dr"
+                        <label for="ae_ol_dr">День рождения</label>
+                        <input class="form-control" type="date" name="ae_ol_dr" id="ae_ol_dr"
                                value="{{ person.dr if person.dr else '' }}">
                     </div>
                     <div class="col-6">
-                        <label for="tg_id">Telegram ID</label>
-                        <input class="form-control" type="number" name="tg_id" id="tg_id"
+                        <label for="ae_ol_tg_id">Telegram ID</label>
+                        <input class="form-control" type="number" name="ae_ol_tg_id" id="ae_ol_tg_id"
                                value="{{ person.tg_id if person.tg_id else '' }}">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6"><div class="form-check">
-                        <label for="could_pay">Может платить</label>
-                        <input class="form-check-input" type="checkbox" name="could_pay" id="could_pay"
+                        <label for="ae_ol_could_pay">Может платить</label>
+                        <input class="form-check-input" type="checkbox" name="ae_ol_could_pay" id="ae_ol_could_pay"
                                {% if person is none or person.could_pay %} checked {% endif %}>
                     </div></div>
                     <div class="col-6"><div class="form-check">
-                        <label for="in_theater">Состоит в театре</label>
-                        <input class="form-check-input" type="checkbox" name="in_theater" id="in_theater"
+                        <label for="ae_ol_in_theater">Состоит в театре</label>
+                        <input class="form-check-input" type="checkbox" name="ae_ol_in_theater" id="ae_ol_in_theater"
                                {% if person is none or person.in_theater %} checked {% endif %}>
                     </div></div>
                 </div>

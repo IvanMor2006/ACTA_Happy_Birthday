@@ -73,3 +73,15 @@
 .nbrb-icon-byn:before {
     content: "\e901";
 }
+
+.gift-card {
+    background-size: cover;
+    background-position: center;
+    min-height: 160px;
+}
+
+@media (min-width: 768px) {
+    .gift-card {
+        min-height: 250px;
+    }
+}

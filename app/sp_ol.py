@@ -40,18 +40,26 @@ def ol(ku):
     people_dr = db.execute("select ku, naim, cy_dr from v_dr_info order by to_date(cy_dr, 'dd.mm.yyyy') desc, naim").fetchall()
     pays = db.execute("select * from v_pay_info where ku_ol = %s order by to_date(cy_dr, 'DD.MM.YYYY') desc", (ku,)).fetchall()
 
+    gift_statuses = db.execute('select * from v_gift_status').fetchall()
+    gifts = db.execute('select * from sp_gift where ku_ol = %s order by naim', (ku,)).fetchall()
+
     db.close()
-    return render_template('sp/ol/ol.html', person=person, roles=roles, people_ol=people_ol, people_dr=people_dr, pays=pays)
+    return render_template(
+        'sp/ol/ol.html',
+        person=person, roles=roles,
+        people_ol=people_ol, people_dr=people_dr, pays=pays,
+        gift_statuses=gift_statuses, gifts=gifts
+    )
 
 @sp_ol_bp.route('/sp/ol/add', methods=['POST'])
 @role_required(['admin'])
 def add():
-    naim = request.form.get('naim')
-    dr = request.form.get('dr') or None
-    tg_id = request.form.get('tg_id') or None
-    could_pay = True if request.form.get('could_pay') else False
-    in_theater = True if request.form.get('in_theater') else False
-    role = request.form.get('role')
+    naim = request.form.get('ae_ol_naim')
+    dr = request.form.get('ae_ol_dr') or None
+    tg_id = request.form.get('ae_ol_tg_id') or None
+    could_pay = True if request.form.get('ae_ol_could_pay') else False
+    in_theater = True if request.form.get('ae_ol_in_theater') else False
+    role = request.form.get('ae_ol_role')
 
     try:
         db = get_db()
@@ -73,12 +81,12 @@ def add():
 @sp_ol_bp.route('/sp/ol/<int:ku>/edit', methods=['POST'])
 @role_required(['admin'])
 def edit(ku):
-    naim = request.form.get('naim') or None
-    dr = request.form.get('dr') or None
-    tg_id = request.form.get('tg_id') or None
-    could_pay = True if request.form.get('could_pay') else False
-    in_theater = True if request.form.get('in_theater') else False
-    role = request.form.get('role')
+    naim = request.form.get('ae_ol_naim') or None
+    dr = request.form.get('ae_ol_dr') or None
+    tg_id = request.form.get('ae_ol_tg_id') or None
+    could_pay = True if request.form.get('ae_ol_could_pay') else False
+    in_theater = True if request.form.get('ae_ol_in_theater') else False
+    role = request.form.get('ae_ol_role')
     try:
         db = get_db()
         db.execute(
@@ -137,7 +145,7 @@ def update_pay(ku):
     db = get_db()
     db.execute(
         'call p_add_to_balance(cast(%s as bigint), cast(%s as numeric), cast(%s as boolean))',
-        (ku, float(request.form.get('sum')), 'auto_debt' in request.form)
+        (ku, float(request.form.get('am_ol_sum')), 'am_ol_auto_debt' in request.form)
     )
     db.commit()
     db.close()
