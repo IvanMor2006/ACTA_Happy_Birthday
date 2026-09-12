@@ -21,8 +21,12 @@ def add(ku_ol):
 
     try:
         db = get_db()
-        db.execute('insert into sp_gift (naim, cost, img, url, status, ku_ol) values (%s, %s, %s, %s, %s, %s)',
-                   (naim, cost, img, url, status, ku_ol))
+        if status:
+            db.execute('insert into sp_gift (naim, cost, img, url, status, ku_ol) values (%s, %s, %s, %s, %s, %s)',
+                    (naim, cost, img, url, status, ku_ol))
+        else:
+            db.execute('insert into sp_gift (naim, cost, img, url, ku_ol) values (%s, %s, %s, %s, %s)',
+                    (naim, cost, img, url, ku_ol))
         db.commit()
         flash('Новый подарок добавлен', 'success')
     except Exception as e:

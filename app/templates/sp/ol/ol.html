@@ -46,6 +46,7 @@
             <button type="button" class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#a_gift">
                 <i class="bi bi-gift-fill"></i> Добавить желаемый подарок
             </button>
+            {% set modal_id = 'a_gift' %}
             {% include 'sp/gift/add.html' %}
 
             {% if gifts %}
@@ -58,6 +59,9 @@
                             <div class="card-body d-flex flex-column justify-content-end p-3"
                                 style="cursor: pointer;"
                                 onclick="window.open('{{ gift.url }}', '_blank')">
+                                {% if user_role in ('admin', 'admin_viewer') %}
+                                    <h5 class="m-0">{{ gift.status }}</h5>
+                                {% endif %}
                                 {% if gift.cost %}
                                     <h5 class="card-title m-0 text-truncate" title="{{ gift.naim }}">{{ gift.naim }}</h5>
                                 {% endif %}
